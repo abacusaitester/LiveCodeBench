@@ -5,4 +5,4 @@ class Scenario(Enum):
     codegeneration = "codegeneration"
     selfrepair = "selfrepair"
     testoutputprediction = "testoutputprediction"
-    codeexecution = "codeexecution"
+    codeprofile = "codeprofile"
