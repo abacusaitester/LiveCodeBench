@@ -1,3 +1,7 @@
+"""
+Runner implementation for Claude models using the Anthropic API.
+"""
+
 import os
 from time import sleep
 
@@ -10,9 +14,20 @@ from lcb_runner.runner.base_runner import BaseRunner
 
 
 class ClaudeRunner(BaseRunner):
+    """
+    Runner class for Claude models using the Anthropic API.
+    Handles API calls, retries, and response processing.
+    """
     client = Anthropic(api_key=os.getenv("ANTHROPIC_KEY"))
 
     def __init__(self, args, model):
+        """
+        Initialize the Claude runner with arguments and model configuration.
+
+        Args:
+            args: Command line arguments containing model parameters
+            model: Language model configuration object
+        """
         super().__init__(args, model)
         self.client_kwargs: dict[str | str] = {
             "model": args.model,
@@ -22,8 +37,32 @@ class ClaudeRunner(BaseRunner):
         }
 
     def _run_single(self, prompt: str) -> list[str]:
+        """
+        Run a single prompt through the Claude model.
+
+        Args:
+            prompt (str): The input prompt to send to the model
+
+        Returns:
+            list[str]: List of generated responses
+
+        Raises:
+            Exception: If API call fails after all retries
+        """
 
         def __run_single(counter):
+            """
+            Helper function to handle API calls with retries.
+
+            Args:
+                counter (int): Number of remaining retry attempts
+
+            Returns:
+                str: Generated response from the model
+
+            Raises:
+                Exception: If API call fails after all retries
+            """
             try:
                 response = self.client.completions.create(
                     prompt=prompt,
