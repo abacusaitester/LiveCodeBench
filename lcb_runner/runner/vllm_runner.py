@@ -10,6 +10,13 @@ from lcb_runner.runner.base_runner import BaseRunner
 
 class VLLMRunner(BaseRunner):
     def __init__(self, args, model):
+        """
+        Initialize the VLLMRunner.
+
+        Args:
+            args: The arguments passed to the runner.
+            model: The language model to be used.
+        """
         super().__init__(args, model)
         model_tokenizer_path = (
             model.model_name if args.local_model_path is None else args.local_model_path
@@ -36,9 +43,30 @@ class VLLMRunner(BaseRunner):
         )
 
     def _run_single(self, prompt: str) -> list[str]:
+        """
+        Run a single prompt through the VLLM model.
+
+        This method is not implemented for VLLMRunner as it uses batch processing.
+
+        Args:
+            prompt (str): The input prompt.
+
+        Returns:
+            list[str]: This method is not implemented and always returns None.
+        """
         pass
 
     def run_batch(self, prompts: list[str]) -> list[list[str]]:
+        """
+        Run a batch of prompts through the VLLM model.
+
+        Args:
+            prompts (list[str]): A list of input prompts.
+
+        Returns:
+            list[list[str]]: A list of lists, where each inner list contains
+                             the generated outputs for a single prompt.
+        """
         outputs = [None for _ in prompts]
         remaining_prompts = []
         remaining_indices = []
