@@ -13,6 +13,13 @@ class CohereRunner(BaseRunner):
     client = cohere.Client(os.getenv("COHERE_API_KEY"))
 
     def __init__(self, args, model):
+        """
+        Initialize the CohereRunner.
+
+        Args:
+            args: Command-line arguments.
+            model: The language model to use.
+        """
         super().__init__(args, model)
         self.client_kwargs: dict[str | str] = {
             "model": args.model,
@@ -22,9 +29,30 @@ class CohereRunner(BaseRunner):
         }
 
     def _run_single(self, prompt: tuple[dict[str,str], str]) -> list[str]:
+        """
+        Run a single prompt through the Cohere model.
+
+        Args:
+            prompt (tuple): A tuple containing chat history and the current message.
+
+        Returns:
+            list[str]: A list of generated responses.
+        """
         chat_history, message = prompt
 
         def __run_single(counter):
+            """
+            Helper function to handle API calls and retries.
+
+            Args:
+                counter (int): Number of remaining retry attempts.
+
+            Returns:
+                str: The generated content.
+
+            Raises:
+                Exception: If all retry attempts fail.
+            """
             try:
                 response = self.client.chat(
                     message=message,
